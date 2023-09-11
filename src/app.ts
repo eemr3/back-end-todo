@@ -1,7 +1,6 @@
-import cors from 'cors';
 import express, { Application } from 'express';
 import swagerUi from 'swagger-ui-express';
-import { UserRouter, AuthRoutes, TaskRoutes } from './infra/routes';
+import { AuthRoutes, TaskRoutes, UserRouter } from './infra/routes';
 import * as swaggerDocument from './swagger.json';
 class App {
   public httpServer: Application;
@@ -11,13 +10,6 @@ class App {
 
   constructor() {
     this.httpServer = express();
-    this.httpServer.use(
-      cors({
-        origin: '*',
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
-      }),
-    );
     this.httpServer.use(express.json());
     this.httpServer.use('/docs', swagerUi.serve, swagerUi.setup(swaggerDocument));
     this.routes();
