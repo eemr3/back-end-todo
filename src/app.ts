@@ -11,19 +11,21 @@ class App {
 
   constructor() {
     this.httpServer = express();
-    this.httpServer.use(
-      cors({
-        origin: '*',
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
-        credentials: true,
-      }),
-    );
-    this.httpServer.use(express.json());
+    this.config();
     this.httpServer.use('/docs', swagerUi.serve, swagerUi.setup(swaggerDocument));
     this.routes();
   }
 
+  private config() {
+    const accessControl: express.RequestHandler = (_req, res, next) => {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS,PUT,PATCH');
+      res.header('Access-Control-Allow-Headers', '*');
+      next();
+    };
+    this.httpServer.use(accessControl);
+    this.httpServer.use(express.json());
+  }
   private routes() {
     this.httpServer.get('/', (_req: any, res: any) => {
       res.send('Hello World');
@@ -33,6 +35,12 @@ class App {
     this.httpServer.use(this.userRoutes.routes);
     this.httpServer.use(this.taskRoutes.routes);
   }
+
+  public start(PORT: number | string): void {
+    this.httpServer.listen(PORT, () =>
+      console.log('Server runing at http://localhost:' + PORT),
+    );
+  }
 }
 
-export default new App().httpServer;
+export default new App();
