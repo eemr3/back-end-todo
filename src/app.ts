@@ -11,7 +11,13 @@ class App {
 
   constructor() {
     this.httpServer = express();
-    this.httpServer.use(cors());
+    this.httpServer.use(
+      cors({
+        origin: '*',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+      }),
+    );
     this.httpServer.use(express.json());
     this.httpServer.use('/docs', swagerUi.serve, swagerUi.setup(swaggerDocument));
     this.routes();
