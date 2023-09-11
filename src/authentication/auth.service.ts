@@ -22,9 +22,7 @@ export class AuthService {
       this.jwtSecret,
     );
 
-    return {
-      access_token: token,
-    };
+    return token;
   }
 
   private async validateUser(email: string, password: string) {
