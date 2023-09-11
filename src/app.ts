@@ -2,6 +2,7 @@ import express, { Application } from 'express';
 import swagerUi from 'swagger-ui-express';
 import { AuthRoutes, TaskRoutes, UserRouter } from './infra/routes';
 import * as swaggerDocument from './swagger.json';
+import cors from 'cors';
 class App {
   public httpServer: Application;
   private authRoutes = new AuthRoutes();
@@ -10,6 +11,13 @@ class App {
 
   constructor() {
     this.httpServer = express();
+    this.httpServer.use(
+      cors({
+        origin: 'https://project-blitzcareer.vercel.app/',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true,
+      }),
+    );
     this.httpServer.use(express.json());
     this.httpServer.use('/docs', swagerUi.serve, swagerUi.setup(swaggerDocument));
     this.routes();
