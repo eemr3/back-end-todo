@@ -13,8 +13,9 @@ class App {
     this.httpServer = express();
     this.httpServer.use(
       cors({
-        origin: 'https://project-blitzcareer.vercel.app/',
+        origin: '*',
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,
       }),
     );
